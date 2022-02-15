@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         actionBar?.hide()
         getLocationPermission()
+        getPhoneCallPermission()
     }
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
@@ -78,6 +79,19 @@ class MainActivity : AppCompatActivity() {
             mMapsViewModel.isLocationPermissionGranted = true
         } else {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+            )
+        }
+    }
+
+    fun getPhoneCallPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE
+            )
+            == PackageManager.PERMISSION_GRANTED) {
+            // do nothing
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE),
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
             )
         }

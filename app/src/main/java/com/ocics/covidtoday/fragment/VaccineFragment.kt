@@ -7,16 +7,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.maps.GeoApiContext
 import com.google.maps.PendingResult
 import com.google.maps.PlacesApi
 import com.google.maps.model.PlaceDetails
@@ -25,13 +24,15 @@ import com.google.maps.model.PlacesSearchResponse
 import com.google.maps.model.RankBy
 import com.ocics.covidtoday.MainActivity
 import com.ocics.covidtoday.R
+import com.ocics.covidtoday.adapter.PlacesRecyclerAdapter
 import com.ocics.covidtoday.databinding.FragmentVaccineBinding
 import com.ocics.covidtoday.util.ApiUtil
 import com.ocics.covidtoday.viewmodel.MapsViewModel
+import okhttp3.internal.notify
 
 const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
 
-class VaccineFragment : Fragment(), OnMapReadyCallback {
+class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.ClickListener {
     private val TAG = javaClass.simpleName
 
     private val mMapsViewModel: MapsViewModel by activityViewModels()
@@ -43,10 +44,13 @@ class VaccineFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mMapView: MapView
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
 
+    // Recyclerview
+    private lateinit var mPlacesRecyclerAdapter: PlacesRecyclerAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentVaccineBinding.inflate(layoutInflater, container, false)
         mBinding.apply { viewmodel = mMapsViewModel }
@@ -55,6 +59,13 @@ class VaccineFragment : Fragment(), OnMapReadyCallback {
         mMapView.onCreate(savedInstanceState)
         mMapView.getMapAsync(this)
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireActivity())
+
+        mPlacesRecyclerAdapter = PlacesRecyclerAdapter()
+        mPlacesRecyclerAdapter.setClickListener(this)
+
+        mBinding.placesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        mBinding.placesRecyclerView.adapter = mPlacesRecyclerAdapter
+
         return mBinding.root
     }
 
@@ -182,6 +193,17 @@ class VaccineFragment : Fragment(), OnMapReadyCallback {
                 )
                 mMapsViewModel.markers.add(marker!!)
             }
+            mPlacesRecyclerAdapter.mPlacesList = ArrayList(mMapsViewModel.placeDetails)
+            mPlacesRecyclerAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onClickCallback(index: Int) {
+        Log.d(TAG, "onClickCallback: $index")
+        if (index != -1) {
+            mMapsViewModel.markers[index].showInfoWindow()
+            mMap.moveCamera(CameraUpdateFactory
+                .newLatLngZoom(mMapsViewModel.markers[index].position,15f))
         }
     }
 
