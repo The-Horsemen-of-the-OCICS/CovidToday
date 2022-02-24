@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -18,39 +17,38 @@
 
         <LinearLayout
             android:id="@+id/location_text_root"
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/location_country_text"
+                style="@style/BoldTitleTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Canada"
-                style="@style/BoldTitleTextStyle"
-                android:textColor="@color/black"
-                />
+                android:text="@string/ca"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/location_province_text"
+                style="@style/BoldContentTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ontario"
-                style="@style/BoldContentTextStyle"
-                android:textColor="@color/black"
-                />
+                android:text="@string/ON"
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
         <Button
+            android:id="@+id/location_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="change"
-            android:textColor="@color/white"
-            android:layout_alignParentRight="true"
             android:layout_alignBottom="@+id/location_text_root"
-            />
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="25dp"
+            android:layout_marginRight="1dp"
+            android:text="@string/change"
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 
@@ -62,14 +60,14 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Covid Info"
+            android:text="@string/covid_info"
             android:icon="@drawable/ic_covid"
             />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vaccine Info"
+            android:text="@string/vaccine_info"
             android:icon="@drawable/ic_vaccine"
             />
 
