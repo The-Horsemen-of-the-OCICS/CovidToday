@@ -8,4 +8,5 @@
     <string name="change">Change</string>
     <string name="covid_info">Covid Info</string>
     <string name="vaccine_info">Vaccine Info</string>
+    <string name="covid_news">COVID-NEWS</string>
 </resources>
