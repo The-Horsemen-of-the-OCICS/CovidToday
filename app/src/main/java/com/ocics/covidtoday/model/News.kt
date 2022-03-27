@@ -1,13 +1,13 @@
 package com.ocics.covidtoday.model
 
-import android.content.ContentValues.TAG
-import android.util.Log
+import android.annotation.SuppressLint
 import android.widget.SimpleAdapter
 import com.kwabenaberko.newsapilib.NewsApiClient
 import com.kwabenaberko.newsapilib.NewsApiClient.ArticlesResponseCallback
 import com.kwabenaberko.newsapilib.models.request.EverythingRequest
 import com.kwabenaberko.newsapilib.models.response.ArticleResponse
-import java.time.format.DateTimeFormatter
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 
 class News {
@@ -91,12 +91,12 @@ class News {
                             item["news_image"] = article.urlToImage
                             item["news_title"] = article.title
                             item["news_link"] = article.url
-                            item["news_author"] = (if(article.author!==null) article.author else '-').toString()
-//                            println("time pre " +article.publishedAt )
-//                            val formatter = DateTimeFormatter.ofPatten("yyyy-MM-dd HH:mm")
-//                            println("time after " +article.publishedAt.format(formatter)
-                            item["news_published_at"] = article.publishedAt
+                            item["news_author"] =
+                                (if (article.author !== null) article.author else '-').toString()
+
+                            item["news_published_at"] = formatDate(article.publishedAt)
                             newsList.add(item)
+
                         }
                     }
                     adapter.notifyDataSetChanged()
@@ -107,5 +107,14 @@ class News {
                 }
             }
         )
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun formatDate(dataString: String): String {
+        val dateFormat: DateFormat =
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        val formatter: DateFormat =
+            SimpleDateFormat("yyyy-MM-dd HH:mm")
+        return formatter.format(dateFormat.parse(dataString))
     }
 }
