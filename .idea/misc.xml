@@ -12,10 +12,11 @@
         <entry key="..\:/Users/Vanjor/AndroidStudioProjects/CovidToday/app/src/main/res/layout/fragment_vaccine.xml" value="0.25" />
         <entry key="..\:/Users/Vanjor/AndroidStudioProjects/CovidToday/app/src/main/res/layout/pager_tabs.xml" value="0.46041666666666664" />
         <entry key="..\:/Users/Vanjor/AndroidStudioProjects/CovidToday/app/src/main/res/layout/place_item.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable-v24/drawable_list_item.xml" value="0.188" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17685185185185184" />
         <entry key="app/src/main/res/layout/fragment_covid.xml" value="0.17933130699088146" />
         <entry key="app/src/main/res/layout/fragment_vaccine.xml" value="0.2667572463768116" />
-        <entry key="app/src/main/res/layout/news_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/news_item.xml" value="0.25" />
       </map>
     </option>
   </component>

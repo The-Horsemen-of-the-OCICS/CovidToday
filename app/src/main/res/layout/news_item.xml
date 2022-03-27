@@ -1,32 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/covid_news_listview_item"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/NewsArticle.View"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    app:cardElevation="@dimen/card_elevation">
 
-    <ImageView
-        android:id="@+id/news_image"
-        android:scaleType="fitXY"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:contentDescription="@string/app_name"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="2dp"/>
-
-    <TextView
-        android:id="@+id/news_title"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_gravity="center" />
+        android:background="@drawable/drawable_list_item">
 
-    <TextView
-        android:id="@+id/news_link"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        <!-- News block -->
+        <RelativeLayout
+            android:id="@+id/newsImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200sp">
+
+            <ImageView
+                android:id="@+id/news_image"
+                style="@style/NewsArticle.Image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/image_size"
+                android:contentDescription="@string/news_image" />
+
+            <TextView
+                android:id="@+id/news_author"
+                style="@style/NewsArticle.Author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                tools:text="ABC News" />
+
+        </RelativeLayout>
+
+        <!-- News Title -->
+        <TextView
+            android:id="@+id/news_title"
+            style="@style/NewsArticle.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/newsImageView"
+            tools:text="Earth is flat" />
+
+        <!-- Publish at -->
+        <TextView
+            android:id="@+id/news_published_at"
+            style="@style/NewsArticle.PublishedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/news_title"
+            android:layout_marginStart="@dimen/normal_padding"
+            android:layout_marginLeft="@dimen/normal_padding"
+            tools:text="@string/str_test_date" />
+
+        <TextView
+            android:id="@+id/news_link"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

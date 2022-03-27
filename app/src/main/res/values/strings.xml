@@ -9,4 +9,8 @@
     <string name="covid_info">Covid Info</string>
     <string name="vaccine_info">Vaccine Info</string>
     <string name="covid_news">COVID-NEWS</string>
+    <!-- Content Description -->
+    <string name="news_image_desc">News Image</string>
+    <string name="news_image">news image</string>
+    <string name="str_test_date">22/02/2022</string>
 </resources>
