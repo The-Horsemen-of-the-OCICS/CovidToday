@@ -33,8 +33,8 @@ class CovidFragment : Fragment() {
 
     private fun fillNewsToUI(){
         val news = News()
-        val from = arrayOf("news_image", "news_title", "news_link")
-        val to = intArrayOf(R.id.news_image,R.id.news_title,R.id.news_link)
+        val from = arrayOf("news_image", "news_title", "news_link", "news_author", "news_published_at")
+        val to = intArrayOf(R.id.news_image,R.id.news_title,R.id.news_link, R.id.news_author,R.id.news_published_at)
         val adapter:SimpleAdapter = object :SimpleAdapter(
             activity,news.getNewsList(),
             R.layout.news_item,from,to
@@ -44,10 +44,10 @@ class CovidFragment : Fragment() {
             }
         }
         news.fetchNewsFromAPI(adapter)
-        val news_list: ListView =  mBinding.root.findViewById<ListView>(R.id.covid_news_list)
-        news_list.adapter = adapter
-        news_list.onItemClickListener =
-            OnItemClickListener { parent, view, position, id ->
+        val newsList: ListView =  mBinding.root.findViewById<ListView>(R.id.covid_news_list)
+        newsList.adapter = adapter
+        newsList.onItemClickListener =
+            OnItemClickListener { _, view, _, _ ->
             val url = (view.findViewById<View>(R.id.news_link) as TextView).text.toString()
             val i = Intent(Intent.ACTION_VIEW)
             i.data = Uri.parse(url)

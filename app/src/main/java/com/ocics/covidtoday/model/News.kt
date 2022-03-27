@@ -1,6 +1,13 @@
 package com.ocics.covidtoday.model
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.widget.SimpleAdapter
+import com.kwabenaberko.newsapilib.NewsApiClient
+import com.kwabenaberko.newsapilib.NewsApiClient.ArticlesResponseCallback
+import com.kwabenaberko.newsapilib.models.request.EverythingRequest
+import com.kwabenaberko.newsapilib.models.response.ArticleResponse
+import java.time.format.DateTimeFormatter
 
 
 class News {
@@ -9,10 +16,12 @@ class News {
     public class NewsItem {
         private var title: String? = null
         private var link: String? = null
+        private var author: String? = null
 
-        public fun NewsItem(title: String?, link: String?) {
+        public fun NewsItem(title: String?, link: String?, author: String?) {
             this.title = title
             this.link = link
+            this.author = author
         }
 
         public fun getLink(): String? {
@@ -26,30 +35,77 @@ class News {
         public fun getTitle(): String? {
             return this.title
         }
+
         public fun setTitle(title: String?) {
             this.title = title
+        }
+
+        public fun getAuthor(): String? {
+            return this.author
+        }
+
+        public fun setAuthor(link: String?) {
+            this.author = author
         }
     }
 
     public fun getNewsList(): List<HashMap<String, String>> {
-        val item = java.util.HashMap<String, String>()
-        item["news_image"] = "https://s.yimg.com/os/creatr-uploaded-images/2021-08/a6250ad0-004d-11ec-bf21-a29998f28b50"
-        item["news_title"] = "US Surgeon General orders tech companies to reveal sources of COVID-19 misinformation"
-        item["news_link"] = "https://www.engadget.com/us-surgeon-general-orders-tech-companies-to-reveal-sources-of-covid-19-misinformation-050540191.html"
-        newsList.add(item)
-        newsList.add(item)
-        newsList.add(item)
-        newsList.add(item)
-        newsList.add(item)
-        newsList.add(item)
-        newsList.add(item)
-        newsList.add(item)
-        newsList.add(item)
+//        val item = java.util.HashMap<String, String>()
+//        item["news_image"] =
+//            "https://s.yimg.com/os/creatr-uploaded-images/2021-08/a6250ad0-004d-11ec-bf21-a29998f28b50"
+//        item["news_title"] =
+//            "US Surgeon General orders tech companies to reveal sources of COVID-19 misinformation"
+//        item["news_link"] =
+//            "https://www.engadget.com/us-surgeon-general-orders-tech-companies-to-reveal-sources-of-covid-19-misinformation-050540191.html"
+//        newsList.add(item)
+//        newsList.add(item)
+//        newsList.add(item)
+//        newsList.add(item)
+//        newsList.add(item)
+//        newsList.add(item)
+//        newsList.add(item)
+//        newsList.add(item)
+//        newsList.add(item)
         return newsList
     }
 
-    //TODO Fetch data from API
-    public fun fetchNewsFromAPI(adapter: SimpleAdapter){
 
+    public fun fetchNewsFromAPI(adapter: SimpleAdapter) {
+        val newsApiClient = NewsApiClient("41aa6852e4f84fcf8e2507d708596d2a")
+        newsApiClient.getEverything(
+            EverythingRequest.Builder()
+                .q("COVID or vaccine")
+                .language("en")
+                .build(),
+            object : ArticlesResponseCallback {
+                override fun onSuccess(response: ArticleResponse) {
+                    val articleList = response.articles
+                    for (article in articleList) {
+                        if (article.title == null) continue
+                        if (article.title.contains("COVID")
+                            || article.title.contains("vaccine")
+                            || article.title.contains("lockdown")
+                            || article.title.contains("pandemic")
+                        ) {
+                            val item = java.util.HashMap<String, String>()
+                            item["news_image"] = article.urlToImage
+                            item["news_title"] = article.title
+                            item["news_link"] = article.url
+                            item["news_author"] = (if(article.author!==null) article.author else '-').toString()
+//                            println("time pre " +article.publishedAt )
+//                            val formatter = DateTimeFormatter.ofPatten("yyyy-MM-dd HH:mm")
+//                            println("time after " +article.publishedAt.format(formatter)
+                            item["news_published_at"] = article.publishedAt
+                            newsList.add(item)
+                        }
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onFailure(throwable: Throwable) {
+                    println(throwable.message)
+                }
+            }
+        )
     }
 }
