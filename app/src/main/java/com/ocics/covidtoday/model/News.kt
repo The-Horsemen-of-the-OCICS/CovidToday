@@ -33,7 +33,7 @@ class News {
 
     public fun getNewsList(): List<HashMap<String, String>> {
         val item = java.util.HashMap<String, String>()
-        item["news_image"] = "https://cdn.cnn.com/cnnnext/dam/assets/220315134412-child-covid-vaccine-011922-super-tease.jpg"
+        item["news_image"] = "https://s.yimg.com/os/creatr-uploaded-images/2021-08/a6250ad0-004d-11ec-bf21-a29998f28b50"
         item["news_title"] = "US Surgeon General orders tech companies to reveal sources of COVID-19 misinformation"
         item["news_link"] = "https://www.engadget.com/us-surgeon-general-orders-tech-companies-to-reveal-sources-of-covid-19-misinformation-050540191.html"
         newsList.add(item)
