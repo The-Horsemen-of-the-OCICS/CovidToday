@@ -51,7 +51,7 @@ class CovidCasesRepository() {
                     call: Call<Map<String, Map<String, CovidStatics>>>,
                     t: Throwable
                 ) {
-                    TODO("Not yet implemented")
+
                 }
             })
     }
