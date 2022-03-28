@@ -5,28 +5,28 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.ocics.covidtoday.databinding.ActivityMainBinding
 import com.ocics.covidtoday.fragment.CovidFragment
 import com.ocics.covidtoday.fragment.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
 import com.ocics.covidtoday.fragment.VaccineFragment
-import com.ocics.covidtoday.viewmodel.MapsViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.ocics.covidtoday.model.Region
 import com.ocics.covidtoday.util.getJsonDataFromAsset
-
-import android.view.*
-import kotlin.collections.ArrayList
+import com.ocics.covidtoday.viewmodel.MapsViewModel
 
 
 private const val NUM_PAGES = 2
@@ -36,8 +36,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding
     private val mMapsViewModel: MapsViewModel by viewModels()
     private lateinit var regions: ArrayList<Region>
-    private var country = "Canada"
-    private var province = "Ontario"
+    var country = "Canada"
+    var province = "Ontario"
+
+    private lateinit var mPagerAdapter: FragmentStateAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,13 +49,13 @@ class MainActivity : AppCompatActivity() {
         val covidIcon: Drawable? = ResourcesCompat.getDrawable(resources, R.drawable.ic_covid, null)
         val vaccineIcon: Drawable? = ResourcesCompat.getDrawable(resources, R.drawable.ic_vaccine, null)
 
-        val pagerAdapter = MainPagerAdapter(this)
+        mPagerAdapter = MainPagerAdapter(this)
         getRegions()
 
-        mBinding.mainPager.adapter = pagerAdapter
+        mBinding.mainPager.adapter = mPagerAdapter
         mBinding.locationChange.setOnClickListener {
             val list = ArrayList<String>()
-            list.add("United State")
+            list.add("United States")
             list.add("Canada")
             popup("Country", list)
         }
@@ -75,10 +77,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        window.setDecorFitsSystemWindows(false)
-        actionBar?.hide()
+        hideSystemBars()
         getLocationPermission()
         getPhoneCallPermission()
+    }
+
+    private fun hideSystemBars() {
+        val windowInsetsController =
+            ViewCompat.getWindowInsetsController(window.decorView) ?: return
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
     }
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
@@ -128,13 +137,20 @@ class MainActivity : AppCompatActivity() {
         builderSingle.setItems(
             list.toTypedArray()
         ) { _: DialogInterface?, which: Int ->
+            var areaChanged = false
             if (word == "Country") {
                 country = list[which]
                 popup("Province", getProvinces(country))
             } else if (word == "Province") {
+                if (province != list[which]) areaChanged = true
                 province = list[which]
                 mBinding.locationCountryText.text = country
                 mBinding.locationProvinceText.text = province
+            }
+
+            // refresh fragments based on new area
+            if (areaChanged) {
+               (supportFragmentManager.findFragmentByTag("f0") as CovidFragment).fillDataSource()
             }
         }
 
@@ -155,7 +171,7 @@ class MainActivity : AppCompatActivity() {
     private fun getProvinces(country: String): ArrayList<String> {
         val list = ArrayList<String>()
         list.add("All")
-        if (country == "United State") {
+        if (country == "United States") {
             regions.forEach {
                 if (it.country == "US")
                     list.add(it.name)

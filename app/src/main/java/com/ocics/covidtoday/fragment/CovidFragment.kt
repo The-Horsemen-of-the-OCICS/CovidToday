@@ -3,6 +3,7 @@ package com.ocics.covidtoday.fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import android.widget.ListView
 import android.widget.SimpleAdapter
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.ocics.covidtoday.MainActivity
 import com.ocics.covidtoday.R
 import com.ocics.covidtoday.databinding.FragmentCovidBinding
 import com.ocics.covidtoday.model.News
@@ -32,7 +34,10 @@ class CovidFragment : Fragment() {
     }
 
     private fun fillNewsToUI(){
-        val news = News()
+        val currentCountry = (activity as MainActivity).country
+        val currentProvince = (activity as MainActivity).province
+
+        val news = News(currentCountry, currentProvince)
         val from = arrayOf("news_image", "news_title", "news_link", "news_author", "news_published_at")
         val to = intArrayOf(R.id.news_image,R.id.news_title,R.id.news_link, R.id.news_author,R.id.news_published_at)
         val adapter:SimpleAdapter = object :SimpleAdapter(
@@ -54,7 +59,8 @@ class CovidFragment : Fragment() {
             startActivity(i)
         }
     }
-    private fun fillDataSource() {
+
+    fun fillDataSource() {
         //Fill data sources
         fillNewsToUI()
     }
