@@ -9,7 +9,7 @@ import com.ocics.covidtoday.repository.CovidCasesRepository
 class CovidStatsViewModel(application: Application) :
     AndroidViewModel(application) {
     private var covidCaseData: LiveData<Map<String, Map<String, CovidStatics>>>? = null
-    private var historyCovidCaseData: LiveData<Map<String, Long>>? = null
+    private lateinit var historyCovidCaseData: LiveData<Map<String, Long>>
     private lateinit var mCovidCasesRepo: CovidCasesRepository
     fun initialize() {
         mCovidCasesRepo = CovidCasesRepository()
@@ -17,11 +17,11 @@ class CovidStatsViewModel(application: Application) :
         historyCovidCaseData = mCovidCasesRepo.getCovidHistoryData()
     }
 
-    fun getHistoryStatsData(): LiveData<Map<String, Long>>? {
+    fun getHistoryStatsData(): LiveData<Map<String, Long>> {
         return historyCovidCaseData
     }
 
     fun requestHistoryData(country: String, province: String) {
-        mCovidCasesRepo.getCovidHistoryCases(country, province)
+        mCovidCasesRepo.getCovidHistory(country, province)
     }
 }

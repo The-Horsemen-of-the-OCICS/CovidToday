@@ -1,10 +1,7 @@
 package com.ocics.covidtoday.fragment
-
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,12 +33,6 @@ class CovidFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this)[CovidStatsViewModel::class.java]
         viewModel.initialize()
-//        viewModel.getResponseData().observe(this) { countries ->
-//            if (countries != null) {
-//                viewModel.setCountriesAndProvinces()
-//            }
-//        }
-
     }
 
 
@@ -89,14 +80,11 @@ class CovidFragment : Fragment() {
             }
     }
 
+
     private fun fillStatics() {
         val aaChartView = mBinding.root.findViewById<AAChartView>(R.id.aa_chart_view)
+        mCovidCasesRepo.getCovidHistory("Canada", "Ontario")
 
-
-        mCovidCasesRepo.getCovidHistoryCases("Canada", "Ontario")
-
-        val historyCovidStatics = viewModel.getHistoryStatsData()
-        Log.i(TAG, "fillStatics: History Statics : >>> ${historyCovidStatics.toString()}")
 
         val aaChartModel: AAChartModel = AAChartModel()
             .chartType(AAChartType.Area)

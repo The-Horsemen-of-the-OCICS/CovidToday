@@ -46,9 +46,9 @@ class HistoryCovidStatics {
 
     @SerializedName("dates")
     @Expose
-    private val data: Map<String?, Long?>? = null
+    private val data: Map<String, Long>? = null
 
-    fun getData(): Map<String?, Long?>? {
+    fun getData(): Map<String, Long>? {
         return data
     }
 }

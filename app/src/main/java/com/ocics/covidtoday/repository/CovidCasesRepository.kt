@@ -37,21 +37,21 @@ class CovidCasesRepository() {
 
     public fun getCovidCases(@Nullable country: String) {
         covidStaticsClient.getCases(country)
-            ?.enqueue(object : retrofit2.Callback<Map<String?, Map<String?, CovidStatics?>?>?> {
+            .enqueue(object : retrofit2.Callback<Map<String, Map<String, CovidStatics>>> {
                 override fun onResponse(
-                    call: Call<Map<String?, Map<String?, CovidStatics?>?>?>,
-                    response: Response<Map<String?, Map<String?, CovidStatics?>?>?>
+                    call: Call<Map<String, Map<String, CovidStatics>>>,
+                    response: Response<Map<String, Map<String, CovidStatics>>>
                 ) {
                     if (response.body() !== null) {
-                        //covidCasesData.postValue(response.body())
+                        covidCasesData.postValue(response.body())
                     }
                 }
 
                 override fun onFailure(
-                    call: Call<Map<String?, Map<String?, CovidStatics?>?>?>,
+                    call: Call<Map<String, Map<String, CovidStatics>>>,
                     t: Throwable
                 ) {
-
+                    TODO("Not yet implemented")
                 }
             })
     }
@@ -60,31 +60,24 @@ class CovidCasesRepository() {
         return covidCasesData
     }
 
-
-    fun getCovidHistoryCases(country: String?, province: String?) {
-        // TODO change the API call to make it accept all kinds of status as prop
-        covidStaticsClient.getHistory("confirmed",country)
-            ?.enqueue(object : Callback<Map<String?, HistoryCovidStatics?>?> {
+    fun getCovidHistory(country: String, province: String) {
+        covidStaticsClient.getHistory("confirmed", country)
+            .enqueue(object : Callback<Map<String, HistoryCovidStatics>> {
                 override fun onResponse(
-                    call: Call<Map<String?, HistoryCovidStatics?>?>,
-                    response: Response<Map<String?, HistoryCovidStatics?>?>
+                    call: Call<Map<String, HistoryCovidStatics>>,
+                    response: Response<Map<String, HistoryCovidStatics>>
                 ) {
-
                     if (response.body() != null) {
-                        if (response.body()!![province] != null) {
-                            // TODO how to store the data into covidHistoryData type.
-                            Log.i(ContentValues.TAG, "fillStatics: Statics : >>> ${response.body()}")
-                            //covidHistoryData.postValue(response.body()!![province]?.getData())
+                        if (response.body()!!.get(province)?.getData() !== null) {
+                            covidHistoryData.postValue(response.body()!!.get(province)?.getData())
                         }
                     }
                 }
 
-                override fun onFailure(
-                    call: Call<Map<String?, HistoryCovidStatics?>?>,
-                    t: Throwable
-                ) {
-                    Log.e(ContentValues.TAG, "fillStatics: Statics  Failure: >>> "+ t)
+                override fun onFailure(call: Call<Map<String, HistoryCovidStatics>>, t: Throwable) {
+                    Log.e(ContentValues.TAG, "fillStatics: Statics  Failure: >>> " + t)
                 }
+
             })
     }
 

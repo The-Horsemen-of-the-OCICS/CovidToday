@@ -9,12 +9,12 @@ import retrofit2.http.Query
 interface CovidStaticsClient {
     @GET("cases")
     fun getCases(
-        @Query("country") country: String?
-    ): Call<Map<String?, Map<String?, CovidStatics?>?>?>?
+        @Query("country") country: String
+    ): Call<Map<String, Map<String, CovidStatics>>>
 
     @GET("history")
     fun getHistory(
-        @Query("status") status: String?,
-        @Query("country") country: String?
-    ): Call<Map<String?, HistoryCovidStatics?>?>?
+        @Query("status") status: String,
+        @Query("country") country: String
+    ): Call<Map<String, HistoryCovidStatics>>
 }
