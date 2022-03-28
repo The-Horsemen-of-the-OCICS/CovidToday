@@ -154,6 +154,7 @@ class MainActivity : AppCompatActivity() {
     // Return a list of provinces for a country
     private fun getProvinces(country: String): ArrayList<String> {
         val list = ArrayList<String>()
+        list.add("All")
         if (country == "United State") {
             regions.forEach {
                 if (it.country == "US")
