@@ -24,6 +24,9 @@ class CovidCasesRepository() {
     private var covidHistoryData: MutableLiveData<Map<String, Long>> =
         MutableLiveData<Map<String, Long>>()
 
+    private var covidCasesConfirmedKey: ArrayList<String> = ArrayList()
+    private var covidCasesConfirmedValue: ArrayList<String> = ArrayList()
+
     init {
         val okHttpClient: OkHttpClient = OkHttpClient.Builder().build()
         covidStaticsClient = retrofit2.Retrofit.Builder()
@@ -69,6 +72,38 @@ class CovidCasesRepository() {
                 ) {
                     if (response.body() != null) {
                         if (response.body()!!.get(province)?.getData() !== null) {
+                            Log.e(
+                                ContentValues.TAG,
+                                "fillStatics: Statics : >>> " + (response.body()!!.get(province)
+                                    ?.getData()?.keys?.reversed())
+                            )
+                            Log.e(
+                                ContentValues.TAG,
+                                "fillStatics: Statics : >>> " + (response.body()!!.get(province)
+                                    ?.getData()?.values?.reversed())
+                            )
+                            val data = response.body()!![province]
+                                ?.getData()
+                            val dataDate = data?.keys?.reversed()
+
+                            if (dataDate != null) {
+                                covidCasesConfirmedKey.addAll(dataDate.toTypedArray())
+                                val itr: Iterator<String> = dataDate.toTypedArray().iterator()
+                                while (itr.hasNext()) {
+                                    val key = itr.next()
+                                    covidCasesConfirmedValue.add(data[key].toString())
+                                }
+                            }
+                            Log.e(
+                                ContentValues.TAG,
+                                "fillStatics: covidCasesConfirmedKey : >>> $covidCasesConfirmedKey"
+                            )
+
+                            Log.e(
+                                ContentValues.TAG,
+                                "fillStatics: covidCasesConfirmedValue : >>> $covidCasesConfirmedValue"
+                            )
+
                             covidHistoryData.postValue(response.body()!!.get(province)?.getData())
                         }
                     }
@@ -84,6 +119,15 @@ class CovidCasesRepository() {
     fun getCovidHistoryData(): MutableLiveData<Map<String, Long>> {
         return covidHistoryData
     }
+
+    fun getCovidConfirmedDataKey(): ArrayList<String> {
+        return covidCasesConfirmedKey
+    }
+
+    fun getCovidConfirmedDataValue(): ArrayList<String> {
+        return covidCasesConfirmedValue
+    }
+
 }
 
 

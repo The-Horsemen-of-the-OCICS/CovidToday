@@ -1,7 +1,11 @@
 package com.ocics.covidtoday.fragment
+
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +26,7 @@ import com.ocics.covidtoday.databinding.FragmentCovidBinding
 import com.ocics.covidtoday.model.News
 import com.ocics.covidtoday.repository.CovidCasesRepository
 import com.squareup.picasso.Picasso
+import java.util.*
 
 
 class CovidFragment : Fragment() {
@@ -33,6 +38,7 @@ class CovidFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this)[CovidStatsViewModel::class.java]
         viewModel.initialize()
+
     }
 
 
@@ -43,6 +49,7 @@ class CovidFragment : Fragment() {
         // Inflate the layout for this fragment
         mBinding = FragmentCovidBinding.inflate(layoutInflater, container, false)
         fillDataSource()
+        fetchData()
         return mBinding.root
     }
 
@@ -83,93 +90,46 @@ class CovidFragment : Fragment() {
 
     private fun fillStatics() {
         val aaChartView = mBinding.root.findViewById<AAChartView>(R.id.aa_chart_view)
-        mCovidCasesRepo.getCovidHistory("Canada", "Ontario")
 
+        Log.d(TAG, "fillStatics: HERE")
 
-        val aaChartModel: AAChartModel = AAChartModel()
-            .chartType(AAChartType.Area)
-            .title("Statics in Ontario")
-            .subtitle("Cases")
-            .backgroundColor(R.color.light_gray)
-            .dataLabelsEnabled(true)
-            .series(
-                arrayOf(
-                    AASeriesElement()
-                        .name("Tokyo")
-                        .data(
-                            arrayOf(
-                                7.0,
-                                6.9,
-                                9.5,
-                                14.5,
-                                18.2,
-                                21.5,
-                                25.2,
-                                26.5,
-                                23.3,
-                                18.3,
-                                13.9,
-                                9.6
-                            )
-                        ),
-                    AASeriesElement()
-                        .name("NewYork")
-                        .data(
-                            arrayOf(
-                                0.2,
-                                0.8,
-                                5.7,
-                                11.3,
-                                17.0,
-                                22.0,
-                                24.8,
-                                24.1,
-                                20.1,
-                                14.1,
-                                8.6,
-                                2.5
-                            )
-                        ),
-                    AASeriesElement()
-                        .name("London")
-                        .data(
-                            arrayOf(
-                                0.9,
-                                0.6,
-                                3.5,
-                                8.4,
-                                13.5,
-                                17.0,
-                                18.6,
-                                17.9,
-                                14.3,
-                                9.0,
-                                3.9,
-                                1.0
-                            )
-                        ),
-                    AASeriesElement()
-                        .name("Berlin")
-                        .data(
-                            arrayOf(
-                                3.9,
-                                4.2,
-                                5.7,
-                                8.5,
-                                11.9,
-                                15.2,
-                                17.0,
-                                16.6,
-                                14.2,
-                                10.3,
-                                6.6,
-                                4.8
-                            )
+        viewModel.getHistoryStatsData().observe(viewLifecycleOwner) { stats ->
+            if (stats != null) {
+                val sortedList =
+                    ArrayList<Pair<String, Long>>()
+                for (key in stats.keys) {
+                    sortedList.add(Pair(key, stats[key]))
+                }
+                Collections.sort(sortedList,
+                    Comparator<Pair<String, Long>> { p1: Pair<String, Long>, p2: Pair<String, Long> ->
+                        p1.first.compareTo(
+                            p2.first
                         )
-                )
-            )
-        //The chart view object calls the instance object of AAChartModel and draws the final graphic
-        aaChartView.aa_drawChartWithChartModel(aaChartModel)
+                    })
+
+               
+            }
+        }
+//        val aaChartModel: AAChartModel = AAChartModel()
+//            .chartType(AAChartType.Area)
+//            .title("Statics in Ontario")
+//            .subtitle("Cases")
+//            .backgroundColor(R.color.light_gray)
+//            .dataLabelsEnabled(true)
+//            .series(
+//                arrayOf(
+//                    AASeriesElement()
+//                        .name("Tokyo")
+//                        .data(arrayOf(7.0, 6.9)),
+//
+//                    )
+//            )
+//        //The chart view object calls the instance object of AAChartModel and draws the final graphic
+//        aaChartView.aa_drawChartWithChartModel(aaChartModel)
+    }
+
+    private fun fetchData() {
+        mCovidCasesRepo.getCovidHistory("Canada", "Ontario")
     }
 
     fun fillDataSource() {
