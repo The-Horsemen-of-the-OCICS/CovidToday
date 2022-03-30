@@ -197,6 +197,7 @@ class CovidFragment : Fragment() {
             .subtitle("Cases")
             .backgroundColor(R.color.light_gray)
             .dataLabelsEnabled(true)
+            .yAxisTitle("")
             .categories(confirmedDataMap.keys.reversed().toTypedArray())
             .series(
                 arrayOf(
