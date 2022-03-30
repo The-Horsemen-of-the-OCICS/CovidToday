@@ -24,6 +24,7 @@ import com.ocics.covidtoday.MainActivity
 import com.ocics.covidtoday.R
 import com.ocics.covidtoday.databinding.FragmentCovidBinding
 import com.ocics.covidtoday.model.News
+import com.ocics.covidtoday.model.Statics
 import com.ocics.covidtoday.repository.CovidCasesRepository
 import com.squareup.picasso.Picasso
 import java.util.*
@@ -49,7 +50,6 @@ class CovidFragment : Fragment() {
         // Inflate the layout for this fragment
         mBinding = FragmentCovidBinding.inflate(layoutInflater, container, false)
         fillDataSource()
-        fetchData()
         return mBinding.root
     }
 
@@ -87,55 +87,40 @@ class CovidFragment : Fragment() {
             }
     }
 
+    private fun fillStaticsToUI() {
+        val currentCountry = (activity as MainActivity).country
+        val currentProvince = (activity as MainActivity).province
 
-    private fun fillStatics() {
+        val statics = Statics(currentCountry, currentProvince)
+
+        Log.d(TAG, "fillStaticsToUI: statics" + statics.getConfirmedDataMap())
+
+
         val aaChartView = mBinding.root.findViewById<AAChartView>(R.id.aa_chart_view)
+        val aaChartModel: AAChartModel = AAChartModel()
+            .chartType(AAChartType.Area)
+            .title("Statics in Ontario")
+            .subtitle("Cases")
+            .backgroundColor(R.color.light_gray)
+            .dataLabelsEnabled(true)
+            .series(
+                arrayOf(
+                    AASeriesElement()
+                        .name("Tokyo")
+                        .data(arrayOf(7.0, 6.9)),
 
-        Log.d(TAG, "fillStatics: HERE")
-
-        viewModel.getHistoryStatsData().observe(viewLifecycleOwner) { stats ->
-            if (stats != null) {
-                val sortedList =
-                    ArrayList<Pair<String, Long>>()
-                for (key in stats.keys) {
-                    sortedList.add(Pair(key, stats[key]))
-                }
-                Collections.sort(sortedList,
-                    Comparator<Pair<String, Long>> { p1: Pair<String, Long>, p2: Pair<String, Long> ->
-                        p1.first.compareTo(
-                            p2.first
-                        )
-                    })
-
-               
-            }
-        }
-//        val aaChartModel: AAChartModel = AAChartModel()
-//            .chartType(AAChartType.Area)
-//            .title("Statics in Ontario")
-//            .subtitle("Cases")
-//            .backgroundColor(R.color.light_gray)
-//            .dataLabelsEnabled(true)
-//            .series(
-//                arrayOf(
-//                    AASeriesElement()
-//                        .name("Tokyo")
-//                        .data(arrayOf(7.0, 6.9)),
-//
-//                    )
-//            )
-//        //The chart view object calls the instance object of AAChartModel and draws the final graphic
-//        aaChartView.aa_drawChartWithChartModel(aaChartModel)
+                    )
+            )
+        //The chart view object calls the instance object of AAChartModel and draws the final graphic
+        aaChartView.aa_drawChartWithChartModel(aaChartModel)
     }
 
-    private fun fetchData() {
-        mCovidCasesRepo.getCovidHistory("Canada", "Ontario")
-    }
+
 
     fun fillDataSource() {
         //Fill data sources
         fillNewsToUI()
-        fillStatics()
+        fillStaticsToUI()
     }
 
 }
