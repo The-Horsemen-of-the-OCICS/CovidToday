@@ -175,8 +175,8 @@ class CovidFragment : Fragment() {
                     call: Call<Map<String, HistoryCovidStatics>>,
                     response: Response<Map<String, HistoryCovidStatics>>
                 ) {
+                    Log.d(TAG, "onResponse: recovered >> NULL")
                     if (response.body() != null) {
-
                         if (response.body()!![province]?.getData() !== null) {
                             recoveredDataMap = response.body()!![province]?.getData()!!
                             Log.d(TAG, "onResponse: recovered >>$recoveredDataMap")
