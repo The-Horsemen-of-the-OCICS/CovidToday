@@ -37,7 +37,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class CovidFragment : Fragment() {
     private lateinit var mBinding: FragmentCovidBinding
-    private val mCovidCasesRepo: CovidCasesRepository = CovidCasesRepository()
     private lateinit var viewModel: CovidStatsViewModel
 
     private val BASE_URL = "https://covid-api.mmediagroup.fr/v1/"
@@ -157,6 +156,7 @@ class CovidFragment : Fragment() {
                         if (response.body()!![province]?.getData() !== null) {
                             deathDataMap = response.body()!![province]?.getData()!!
                             Log.d(TAG, "onResponse: deaths >>$deathDataMap")
+                            drawChart()
                             fetchRecoveredDataFromAPI(country, province)
                         }
                     }
@@ -184,7 +184,6 @@ class CovidFragment : Fragment() {
                         }
                     }
                 }
-
                 override fun onFailure(call: Call<Map<String, HistoryCovidStatics>>, t: Throwable) {
                     Log.e(ContentValues.TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
                 }
@@ -198,15 +197,20 @@ class CovidFragment : Fragment() {
             .subtitle("Cases")
             .backgroundColor(R.color.light_gray)
             .dataLabelsEnabled(true)
+            .categories(confirmedDataMap.keys.reversed().toTypedArray())
             .series(
                 arrayOf(
                     AASeriesElement()
-                        .name("Tokyo")
-                        .data(arrayOf(7.0, 6.9)),
+                        .name("Confirmed")
+                        .data(confirmedDataMap.values.reversed().toTypedArray()),
+                    AASeriesElement()
+                        .name("Deaths")
+                        .data(
+                            deathDataMap.values.reversed().toTypedArray()
+                        ),
+                ),
 
-                    )
-            )
-        //The chart view object calls the instance object of AAChartModel and draws the final graphic
+                )
         //The chart view object calls the instance object of AAChartModel and draws the final graphic
         aaChartView.aa_drawChartWithChartModel(aaChartModel)
     }
