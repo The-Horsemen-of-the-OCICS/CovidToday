@@ -25,7 +25,6 @@ import com.ocics.covidtoday.R
 import com.ocics.covidtoday.databinding.FragmentCovidBinding
 import com.ocics.covidtoday.model.HistoryCovidStatics
 import com.ocics.covidtoday.model.News
-import com.ocics.covidtoday.repository.CovidCasesRepository
 import com.ocics.covidtoday.util.CovidStaticsClient
 import com.squareup.picasso.Picasso
 import okhttp3.OkHttpClient
@@ -37,21 +36,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class CovidFragment : Fragment() {
     private lateinit var mBinding: FragmentCovidBinding
-    private lateinit var viewModel: CovidStatsViewModel
 
     private val BASE_URL = "https://covid-api.mmediagroup.fr/v1/"
     private lateinit var covidStaticsClient: CovidStaticsClient
     private var confirmedDataMap: Map<String, Long> = mapOf()
     private var deathDataMap: Map<String, Long> = mapOf()
-    private var recoveredDataMap: Map<String, Long> = mapOf()
     private lateinit var aaChartView: AAChartView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this)[CovidStatsViewModel::class.java]
-        viewModel.initialize()
-
     }
 
 
@@ -63,6 +57,12 @@ class CovidFragment : Fragment() {
         mBinding = FragmentCovidBinding.inflate(layoutInflater, container, false)
         fillDataSource()
         return mBinding.root
+    }
+
+    fun fillDataSource() {
+        //Fill data sources
+        fillNewsToUI()
+        fillStaticsToUI()
     }
 
     private fun fillNewsToUI() {
@@ -117,12 +117,6 @@ class CovidFragment : Fragment() {
     }
 
 
-    fun fillDataSource() {
-        //Fill data sources
-        fillNewsToUI()
-        fillStaticsToUI()
-    }
-
     fun fetchConfirmedDataFromAPI(country: String, province: String) {
         covidStaticsClient.getHistory("confirmed", country)
             .enqueue(object : Callback<Map<String, HistoryCovidStatics>> {
@@ -157,7 +151,6 @@ class CovidFragment : Fragment() {
                             deathDataMap = response.body()!![province]?.getData()!!
                             Log.d(TAG, "onResponse: deaths >>$deathDataMap")
                             drawChart()
-                            fetchRecoveredDataFromAPI(country, province)
                         }
                     }
                 }
@@ -168,27 +161,6 @@ class CovidFragment : Fragment() {
             })
     }
 
-    fun fetchRecoveredDataFromAPI(country: String, province: String) {
-        covidStaticsClient.getHistory("recovered", country)
-            .enqueue(object : Callback<Map<String, HistoryCovidStatics>> {
-                override fun onResponse(
-                    call: Call<Map<String, HistoryCovidStatics>>,
-                    response: Response<Map<String, HistoryCovidStatics>>
-                ) {
-                    Log.d(TAG, "onResponse: recovered >> NULL")
-                    if (response.body() != null) {
-                        if (response.body()!![province]?.getData() !== null) {
-                            recoveredDataMap = response.body()!![province]?.getData()!!
-                            Log.d(TAG, "onResponse: recovered >>$recoveredDataMap")
-                            drawChart()
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<Map<String, HistoryCovidStatics>>, t: Throwable) {
-                    Log.e(ContentValues.TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
-                }
-            })
-    }
 
     fun drawChart() {
         val aaChartModel: AAChartModel = AAChartModel()
