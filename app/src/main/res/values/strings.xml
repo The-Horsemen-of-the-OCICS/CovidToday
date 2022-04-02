@@ -12,4 +12,8 @@
     <string name="news_image_desc">News Image</string>
     <string name="news_image">news image</string>
     <string name="str_test_date">22/02/2022</string>
+    <string name="vaccinated">Vaccinated:</string>
+    <string name="unknown">unknown</string>
+    <string name="fully_vaccinated">Fully Vaccinated:</string>
+    <string name="partially_vaccinated">Partially Vaccinated:</string>
 </resources>

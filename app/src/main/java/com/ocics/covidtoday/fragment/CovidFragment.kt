@@ -117,7 +117,7 @@ class CovidFragment : Fragment() {
     }
 
 
-    fun fetchConfirmedDataFromAPI(country: String, province: String) {
+    private fun fetchConfirmedDataFromAPI(country: String, province: String) {
         covidStaticsClient.getHistory("confirmed", country)
             .enqueue(object : Callback<Map<String, HistoryCovidStatics>> {
                 override fun onResponse(
