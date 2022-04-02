@@ -39,11 +39,11 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:layout_weight="1"
-                            android:text="Vaccine statics" />
+                            android:text="@string/vaccine_statics_country" />
                     </LinearLayout>
 
 
@@ -52,15 +52,15 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/overall_vaccinated"
+                            android:id="@+id/administered"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
-                            android:text="@string/vaccinated" />
+                            android:text="@string/administered" />
 
                         <TextView
-                            android:id="@+id/overall_vaccinated_value"
+                            android:id="@+id/administered_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"

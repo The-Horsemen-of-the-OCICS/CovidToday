@@ -10,7 +10,7 @@ class VaccineStatics {
 
     @SerializedName("people_vaccinated")
     @Expose
-    private val people_vaccinated: Long? = null
+    private val peopleVaccinated: Long? = null
 
     @SerializedName("people_partially_vaccinated")
     @Expose
@@ -68,12 +68,12 @@ class VaccineStatics {
     @Expose
     private val updated: String? = null
 
-    fun getPeopleVaccinated(): Long? {
+    fun getAdministered(): Long? {
         return administered
     }
 
     fun getPeopleFullyVaccinated(): Long? {
-        return people_vaccinated
+        return peopleVaccinated
     }
 
     fun getPeoplePartiallyVaccinated(): Long? {

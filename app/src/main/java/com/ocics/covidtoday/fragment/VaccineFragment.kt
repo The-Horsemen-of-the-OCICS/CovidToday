@@ -53,7 +53,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
     // Vaccine Statics
     private val BASE_URL = "https://covid-api.mmediagroup.fr/v1/"
     private lateinit var vaccineStaticsClient: VaccineStaticsClient
-    private lateinit var vaccinatedValueTextView: TextView
+    private lateinit var administeredValueTextView: TextView
     private lateinit var fullyVaccinatedValueTextView: TextView
     private lateinit var partiallyVaccinatedValueTextView: TextView
 
@@ -85,7 +85,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
         mBinding.placesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         mBinding.placesRecyclerView.adapter = mPlacesRecyclerAdapter
 
-        vaccinatedValueTextView = mBinding.overallVaccinatedValue
+        administeredValueTextView = mBinding.administeredValue
         fullyVaccinatedValueTextView = mBinding.fullyVaccinatedValue
         partiallyVaccinatedValueTextView = mBinding.partiallyVaccinatedValue
 
@@ -217,8 +217,8 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
                     response: Response<Map<String, VaccineStatics>>
                 ) {
                     if (response.body() != null) {
-                        vaccinatedValueTextView.text =
-                            response.body()!!["All"]?.getPeopleVaccinated().toString()
+                        administeredValueTextView.text =
+                            response.body()!!["All"]?.getAdministered().toString()
                         fullyVaccinatedValueTextView.text =
                             response.body()!!["All"]?.getPeopleFullyVaccinated().toString()
                         partiallyVaccinatedValueTextView.text =
