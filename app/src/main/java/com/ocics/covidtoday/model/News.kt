@@ -55,13 +55,12 @@ class News(val country: String, val province: String) {
         }
     }
 
-    public fun getNewsList(): List<HashMap<String, String>> {
+    fun getNewsList(): List<HashMap<String, String>> {
         return newsList
     }
 
     private fun getQueryKeyword(): String {
-        var result = ""
-        result = if (province == "All") {
+        var result = if (province == "All") {
             if (country == "Canada") {
                 "(Canada OR CAN OR Canadian OR CA)"
             } else {
@@ -75,7 +74,7 @@ class News(val country: String, val province: String) {
         return result
     }
 
-    public fun fetchNewsFromAPI(adapter: SimpleAdapter) {
+    fun fetchNewsFromAPI(adapter: SimpleAdapter) {
         val newsApiClient = NewsApiClient("41aa6852e4f84fcf8e2507d708596d2a")
         newsApiClient.getEverything(
             EverythingRequest.Builder()
@@ -117,8 +116,8 @@ class News(val country: String, val province: String) {
     }
 
     private fun formatDate(dateString: String): String {
-        val odt = OffsetDateTime.parse(dateString);
-        val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.US);
+        val odt = OffsetDateTime.parse(dateString)
+        val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.US)
 
         return dtf.format(odt)
     }

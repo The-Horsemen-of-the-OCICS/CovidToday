@@ -48,7 +48,8 @@
             android:layout_marginBottom="25dp"
             android:layout_marginRight="1dp"
             android:text="@string/change"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:translationZ="1dp" />
 
     </RelativeLayout>
 

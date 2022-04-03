@@ -145,7 +145,7 @@ class CovidFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<Map<String, HistoryCovidStatics>>, t: Throwable) {
-                    Log.e(ContentValues.TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
+                    Log.e(TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
                 }
             })
     }
@@ -167,7 +167,7 @@ class CovidFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<Map<String, HistoryCovidStatics>>, t: Throwable) {
-                    Log.e(ContentValues.TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
+                    Log.e(TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
                 }
             })
     }
