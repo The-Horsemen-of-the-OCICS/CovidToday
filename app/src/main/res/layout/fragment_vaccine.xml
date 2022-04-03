@@ -39,11 +39,19 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
                             android:layout_weight="1"
                             android:text="@string/vaccine_statistic_country" />
+
+                        <ImageButton
+                            android:id="@+id/shareButton_vaccine"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="#FFFFFF"
+                            android:src="@drawable/ic_share"
+                            app:tint="#000000" />
                     </LinearLayout>
 
 
