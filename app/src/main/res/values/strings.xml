@@ -16,8 +16,11 @@
     <string name="unknown">unknown</string>
     <string name="fully_vaccinated">Fully Vaccinated:</string>
     <string name="partially_vaccinated">Partially Vaccinated:</string>
-    <string name="vaccine_statics_country">Vaccine statics (Country)</string>
+    <string name="vaccine_statistic_country">Vaccine statistic (Country)</string>
     <string name="administered">Administered</string>
-    <string name="covid_statics">Covid statics</string>
-    <string name="statics_by_location">Statics by location</string>
+    <string name="covid_statistic">Covid statistic</string>
+    <string name="statistic_by_location">Statistic by location</string>
+    <string name="nearby_vaccine_locations">Nearby Vaccine Locations</string>
+    <string name="loading_maps">Loading Maps</string>
+    <string name="share">share</string>
 </resources>

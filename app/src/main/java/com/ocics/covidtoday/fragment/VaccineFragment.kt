@@ -89,7 +89,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
         fullyVaccinatedValueTextView = mBinding.fullyVaccinatedValue
         partiallyVaccinatedValueTextView = mBinding.partiallyVaccinatedValue
 
-        fillVaccineStaticsToUI()
+        fillVaccineStatisticsToUI()
 
         return mBinding.root
     }
@@ -195,7 +195,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
             })
     }
 
-    private fun fillVaccineStaticsToUI() {
+    fun fillVaccineStatisticsToUI() {
         val currentCountry = (activity as MainActivity).country
 
         val okHttpClient: OkHttpClient = OkHttpClient.Builder().build()

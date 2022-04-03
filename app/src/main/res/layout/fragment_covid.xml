@@ -38,7 +38,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/statics_by_location" />
+                            android:text="@string/statistic_by_location" />
 
                         <ImageButton
                             android:id="@+id/shareButton"
@@ -47,7 +47,8 @@
                             android:layout_weight="1"
                             android:background="#FFFFFF"
                             android:src="@drawable/ic_share"
-                            app:tint="#000000" />
+                            app:tint="#000000"
+                            android:contentDescription="@string/share" />
 
 
                     </LinearLayout>
@@ -65,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@string/covid_statics" />
+                        android:text="@string/covid_statistic" />
 
                 </LinearLayout>
 

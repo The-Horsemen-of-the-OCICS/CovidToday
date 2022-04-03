@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         mBinding.mainPager.adapter = mPagerAdapter
         mBinding.locationChange.setOnClickListener {
             val list = ArrayList<String>()
-            list.add("United States")
+            list.add("China")
             list.add("Canada")
             popup("Country", list)
         }
@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                 country = list[which]
                 popup("Province", getProvinces(country))
             } else if (word == "Province") {
-                if (province != list[which]) areaChanged = true
+                if (province != list[which] || mBinding.locationCountryText.text != country) areaChanged = true
                 province = list[which]
                 mBinding.locationCountryText.text = country
                 mBinding.locationProvinceText.text = province
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
 
             // refresh fragments based on new area
             if (areaChanged) {
-               (supportFragmentManager.findFragmentByTag("f0") as CovidFragment).fillDataSource()
+                (supportFragmentManager.findFragmentByTag("f0") as CovidFragment).fillDataSource()
             }
         }
 
@@ -172,9 +172,9 @@ class MainActivity : AppCompatActivity() {
     private fun getProvinces(country: String): ArrayList<String> {
         val list = ArrayList<String>()
         list.add("All")
-        if (country == "United States") {
+        if (country == "China") {
             regions.forEach {
-                if (it.country == "US")
+                if (it.country == "CN")
                     list.add(it.name)
             }
         } else if (country == "Canada") {

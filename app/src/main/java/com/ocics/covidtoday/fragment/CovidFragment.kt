@@ -1,7 +1,6 @@
 package com.ocics.covidtoday.fragment
 
 import android.content.ClipData
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Bitmap
@@ -73,7 +72,7 @@ class CovidFragment : Fragment() {
     fun fillDataSource() {
         //Fill data sources
         fillNewsToUI()
-        fillStaticsToUI()
+        fillStatisticsToUI()
     }
 
     private fun fillNewsToUI() {
@@ -110,11 +109,11 @@ class CovidFragment : Fragment() {
             }
     }
 
-    private fun fillStaticsToUI() {
-        val currentCountry = (activity as MainActivity).country
+    private fun fillStatisticsToUI() {
+        var currentCountry = (activity as MainActivity).country
         val currentProvince = (activity as MainActivity).province
 
-        aaChartView = mBinding.root.findViewById<AAChartView>(R.id.aa_chart_view)
+        aaChartView = mBinding.root.findViewById(R.id.aa_chart_view)
 
         val okHttpClient: OkHttpClient = OkHttpClient.Builder().build()
         covidStaticsClient = retrofit2.Retrofit.Builder()
@@ -174,9 +173,13 @@ class CovidFragment : Fragment() {
 
 
     fun drawChart() {
+        var location = (activity as MainActivity).province
+        if (location == "All")
+            location = (activity as MainActivity).country
+        val title = "Statistic in $location"
         val aaChartModel: AAChartModel = AAChartModel()
             .chartType(AAChartType.Area)
-            .title("Statics in Ontario")
+            .title(title)
             .subtitle("Cases")
             .backgroundColor(R.color.light_gray)
             .dataLabelsEnabled(true)

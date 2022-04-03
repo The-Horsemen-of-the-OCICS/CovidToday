@@ -19,42 +19,6 @@ class News(val country: String, val province: String) {
     private val TAG = "News"
     private val newsList: MutableList<HashMap<String, String>> = ArrayList()
 
-    public class NewsItem {
-        private var title: String? = null
-        private var link: String? = null
-        private var author: String? = null
-
-        public fun NewsItem(title: String?, link: String?, author: String?) {
-            this.title = title
-            this.link = link
-            this.author = author
-        }
-
-        public fun getLink(): String? {
-            return this.link
-        }
-
-        public fun setLink(link: String?) {
-            this.link = link
-        }
-
-        public fun getTitle(): String? {
-            return this.title
-        }
-
-        public fun setTitle(title: String?) {
-            this.title = title
-        }
-
-        public fun getAuthor(): String? {
-            return this.author
-        }
-
-        public fun setAuthor(link: String?) {
-            this.author = author
-        }
-    }
-
     fun getNewsList(): List<HashMap<String, String>> {
         return newsList
     }
