@@ -34,7 +34,7 @@ class VaccineStatics {
 
     @SerializedName("elevation_in_meters")
     @Expose
-    private val elevationInMeters: Long? = null
+    private val elevationInMeters: String? = null
 
     @SerializedName("continent")
     @Expose
