@@ -1,6 +1,7 @@
 package com.ocics.covidtoday.fragment
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -90,6 +91,11 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
         partiallyVaccinatedValueTextView = mBinding.partiallyVaccinatedValue
 
         fillVaccineStaticsToUI()
+
+        mBinding.shareButtonVaccine.setOnClickListener {
+            share(getVaccineStaticsData())
+        }
+        mBinding.shareButtonVaccine.visibility = View.INVISIBLE
 
         return mBinding.root
     }
@@ -223,6 +229,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
                             response.body()!!["All"]?.getPeopleFullyVaccinated().toString()
                         partiallyVaccinatedValueTextView.text =
                             response.body()!!["All"]?.getPeoplePartiallyVaccinated().toString()
+                        mBinding.shareButtonVaccine.visibility = View.VISIBLE
                     }
                 }
 
@@ -286,4 +293,17 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
         }
     }
 
+    private fun getVaccineStaticsData(): String {
+        return "\n Administered: ${administeredValueTextView.text} \n Fully Vaccinated: ${fullyVaccinatedValueTextView.text} \n  Partially Vaccinated: ${partiallyVaccinatedValueTextView.text}"
+    }
+
+    private fun share(string: String) {
+        if (string !== "") {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/*"
+            }
+            startActivity(Intent.createChooser(sendIntent, "Share with"))
+        }
+    }
 }
