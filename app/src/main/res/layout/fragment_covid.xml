@@ -35,10 +35,19 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Statics by location" />
+                            android:text="@string/statics_by_location" />
+
+                        <ImageButton
+                            android:id="@+id/shareButton"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="#FFFFFF"
+                            android:src="@drawable/ic_share"
+                            app:tint="#000000" />
 
 
                     </LinearLayout>
@@ -56,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Covid statics" />
+                        android:text="@string/covid_statics" />
 
                 </LinearLayout>
 

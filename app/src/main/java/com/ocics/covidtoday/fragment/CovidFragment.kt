@@ -1,8 +1,12 @@
 package com.ocics.covidtoday.fragment
 
+import android.content.ClipData
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -14,8 +18,8 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import com.github.aachartmodel.aainfographics.aachartcreator.AAChartModel
 import com.github.aachartmodel.aainfographics.aachartcreator.AAChartType
 import com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
@@ -32,6 +36,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class CovidFragment : Fragment() {
@@ -48,7 +56,6 @@ class CovidFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +63,10 @@ class CovidFragment : Fragment() {
         // Inflate the layout for this fragment
         mBinding = FragmentCovidBinding.inflate(layoutInflater, container, false)
         fillDataSource()
+        mBinding.shareButton.setOnClickListener {
+            share(getBitmapFromView(mBinding.aaChartView))
+        }
+        mBinding.shareButton.visibility = View.INVISIBLE
         return mBinding.root
     }
 
@@ -117,7 +128,7 @@ class CovidFragment : Fragment() {
     }
 
 
-    fun fetchConfirmedDataFromAPI(country: String, province: String) {
+    private fun fetchConfirmedDataFromAPI(country: String, province: String) {
         covidStaticsClient.getHistory("confirmed", country)
             .enqueue(object : Callback<Map<String, HistoryCovidStatics>> {
                 override fun onResponse(
@@ -184,7 +195,59 @@ class CovidFragment : Fragment() {
                 ),
 
                 )
-        //The chart view object calls the instance object of AAChartModel and draws the final graphic
+        // The chart view object calls the instance object of AAChartModel and draws the final graphic
         aaChartView.aa_drawChartWithChartModel(aaChartModel)
+        mBinding.shareButton.visibility = View.VISIBLE
+    }
+
+    private fun getBitmapFromView(view: View): Bitmap? {
+        // Define a bitmap with the same size as the view
+        val returnedBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(returnedBitmap)
+        val bgDrawable = view.background
+        if (bgDrawable != null)
+            bgDrawable.draw(canvas) else
+            canvas.drawColor(Color.WHITE)
+        // Draw the view on the canvas
+        view.draw(canvas)
+
+        return returnedBitmap
+    }
+
+    private fun share(bitmap: Bitmap?) {
+        if (bitmap != null) {
+            val mediaStorageDir = File(context?.externalCacheDir.toString() + "Image.png")
+            try {
+                val outputStream = FileOutputStream(java.lang.String.valueOf(mediaStorageDir))
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                outputStream.close()
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            val imageUri = FileProvider.getUriForFile(
+                requireActivity(),
+                requireActivity().applicationContext.packageName + ".provider",
+                mediaStorageDir
+            )
+            val mimeType = arrayOf("image/png")
+            if (imageUri != null) {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_STREAM, imageUri)
+                    type = "image/*"
+                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    clipData = ClipData(
+                        "Covid Stats",
+                        mimeType,
+                        ClipData.Item(imageUri)
+                    )
+                }
+
+                startActivity(Intent.createChooser(sendIntent, "Share with"))
+            }
+
+        }
     }
 }

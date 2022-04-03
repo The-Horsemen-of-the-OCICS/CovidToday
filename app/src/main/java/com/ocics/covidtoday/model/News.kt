@@ -1,6 +1,5 @@
 package com.ocics.covidtoday.model
 
-import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.SimpleAdapter
 import com.kwabenaberko.newsapilib.NewsApiClient
@@ -9,6 +8,11 @@ import com.kwabenaberko.newsapilib.models.request.EverythingRequest
 import com.kwabenaberko.newsapilib.models.response.ArticleResponse
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class News(val country: String, val province: String) {
@@ -112,12 +116,10 @@ class News(val country: String, val province: String) {
         )
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private fun formatDate(dataString: String): String {
-        val dateFormat: DateFormat =
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        val formatter: DateFormat =
-            SimpleDateFormat("yyyy-MM-dd HH:mm")
-        return formatter.format(dateFormat.parse(dataString))
+    private fun formatDate(dateString: String): String {
+        val odt = OffsetDateTime.parse(dateString);
+        val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.US);
+
+        return dtf.format(odt)
     }
 }
