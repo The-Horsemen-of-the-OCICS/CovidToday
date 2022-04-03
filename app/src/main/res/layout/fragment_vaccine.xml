@@ -22,6 +22,7 @@
             tools:context=".fragment.VaccineFragment">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/vaccine_stat_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
@@ -39,6 +40,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:id="@+id/vaccine_card_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

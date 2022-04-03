@@ -150,8 +150,12 @@ class MainActivity : AppCompatActivity() {
 
             // refresh fragments based on new area
             if (areaChanged) {
-                (supportFragmentManager.findFragmentByTag("f0") as CovidFragment).fillDataSource()
-                (supportFragmentManager.findFragmentByTag("f1") as VaccineFragment).fillVaccineStatisticsToUI()
+                if (supportFragmentManager.findFragmentByTag("f0") != null) {
+                        (supportFragmentManager.findFragmentByTag("f0") as CovidFragment).fillDataSource()
+                }
+                if (supportFragmentManager.findFragmentByTag("f1") != null) {
+                    (supportFragmentManager.findFragmentByTag("f1") as VaccineFragment).fillVaccineStatisticsToUI()
+                }
             }
         }
 

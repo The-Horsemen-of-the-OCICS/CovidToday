@@ -1,7 +1,11 @@
 package com.ocics.covidtoday.fragment
 
+import android.content.ClipData
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +46,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
 
@@ -93,7 +102,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
         fillVaccineStatisticsToUI()
 
         mBinding.shareButtonVaccine.setOnClickListener {
-            share(getVaccineStaticsData())
+            share(getBitmapFromView(mBinding.vaccineStatCard))
         }
         mBinding.shareButtonVaccine.visibility = View.INVISIBLE
 
@@ -223,6 +232,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
                     response: Response<Map<String, VaccineStatics>>
                 ) {
                     if (response.body() != null) {
+                        mBinding.vaccineCardTitle.text = "Vaccine statistics (${(activity as MainActivity).country})"
                         administeredValueTextView.text =
                             response.body()!!["All"]?.getAdministered().toString()
                         fullyVaccinatedValueTextView.text =
@@ -297,13 +307,54 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
         return "\n Administered: ${administeredValueTextView.text} \n Fully Vaccinated: ${fullyVaccinatedValueTextView.text} \n  Partially Vaccinated: ${partiallyVaccinatedValueTextView.text}"
     }
 
-    private fun share(string: String) {
-        if (string !== "") {
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/*"
+    private fun getBitmapFromView(view: View): Bitmap? {
+        // Define a bitmap with the same size as the view
+        val returnedBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(returnedBitmap)
+        val bgDrawable = view.background
+        if (bgDrawable != null)
+            bgDrawable.draw(canvas) else
+            canvas.drawColor(Color.WHITE)
+        // Draw the view on the canvas
+        view.draw(canvas)
+
+        return returnedBitmap
+    }
+
+    private fun share(bitmap: Bitmap?) {
+        if (bitmap != null) {
+            val mediaStorageDir = File(context?.externalCacheDir.toString() + "Image.png")
+            try {
+                val outputStream = FileOutputStream(java.lang.String.valueOf(mediaStorageDir))
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                outputStream.close()
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-            startActivity(Intent.createChooser(sendIntent, "Share with"))
+            val imageUri = FileProvider.getUriForFile(
+                requireActivity(),
+                requireActivity().applicationContext.packageName + ".provider",
+                mediaStorageDir
+            )
+            val mimeType = arrayOf("image/png")
+            if (imageUri != null) {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_STREAM, imageUri)
+                    type = "image/*"
+                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    clipData = ClipData(
+                        "Vaccine Stats",
+                        mimeType,
+                        ClipData.Item(imageUri)
+                    )
+                }
+
+                startActivity(Intent.createChooser(sendIntent, "Share with"))
+            }
+
         }
     }
 }
