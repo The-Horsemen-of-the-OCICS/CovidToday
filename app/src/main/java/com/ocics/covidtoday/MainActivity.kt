@@ -3,7 +3,6 @@ package com.ocics.covidtoday
 import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -152,6 +151,7 @@ class MainActivity : AppCompatActivity() {
             // refresh fragments based on new area
             if (areaChanged) {
                 (supportFragmentManager.findFragmentByTag("f0") as CovidFragment).fillDataSource()
+                (supportFragmentManager.findFragmentByTag("f1") as VaccineFragment).fillVaccineStatisticsToUI()
             }
         }
 
@@ -173,7 +173,7 @@ class MainActivity : AppCompatActivity() {
         val list = ArrayList<String>()
         list.add("All")
         if (country == "China") {
-            regions.forEach {
+            regions.sortedBy { it.name }.forEach {
                 if (it.country == "CN")
                     list.add(it.name)
             }
