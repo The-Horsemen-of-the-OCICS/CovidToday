@@ -28,7 +28,7 @@ import com.ocics.covidtoday.R
 import com.ocics.covidtoday.databinding.FragmentCovidBinding
 import com.ocics.covidtoday.model.HistoryCovidStatistic
 import com.ocics.covidtoday.model.News
-import com.ocics.covidtoday.util.CovidStaticsClient
+import com.ocics.covidtoday.util.CovidStatClient
 import com.squareup.picasso.Picasso
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -45,7 +45,7 @@ class CovidFragment : Fragment() {
     private lateinit var mBinding: FragmentCovidBinding
 
     private val BASE_URL = "https://covid-api.mmediagroup.fr/v1/"
-    private lateinit var covidStaticsClient: CovidStaticsClient
+    private lateinit var covidStatClient: CovidStatClient
     private var confirmedDataMap: Map<String, Long> = mapOf()
     private var deathDataMap: Map<String, Long> = mapOf()
     private lateinit var aaChartView: AAChartView
@@ -116,19 +116,19 @@ class CovidFragment : Fragment() {
         aaChartView = mBinding.root.findViewById(R.id.aa_chart_view)
 
         val okHttpClient: OkHttpClient = OkHttpClient.Builder().build()
-        covidStaticsClient = retrofit2.Retrofit.Builder()
+        covidStatClient = retrofit2.Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(CovidStaticsClient::class.java)
+            .create(CovidStatClient::class.java)
         fetchConfirmedDataFromAPI(currentCountry, currentProvince)
 
     }
 
 
     private fun fetchConfirmedDataFromAPI(country: String, province: String) {
-        covidStaticsClient.getHistory("confirmed", country)
+        covidStatClient.getHistory("confirmed", country)
             .enqueue(object : Callback<Map<String, HistoryCovidStatistic>> {
                 override fun onResponse(
                     call: Call<Map<String, HistoryCovidStatistic>>,
@@ -150,7 +150,7 @@ class CovidFragment : Fragment() {
     }
 
     fun fetchDeathDataFromAPI(country: String, province: String) {
-        covidStaticsClient.getHistory("deaths", country)
+        covidStatClient.getHistory("deaths", country)
             .enqueue(object : Callback<Map<String, HistoryCovidStatistic>> {
                 override fun onResponse(
                     call: Call<Map<String, HistoryCovidStatistic>>,

@@ -3,7 +3,7 @@ package com.ocics.covidtoday.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class VaccineStatics {
+class VaccineStatistic {
     @SerializedName("administered")
     @Expose
     private val administered: Long? = null

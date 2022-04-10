@@ -37,9 +37,9 @@ import com.ocics.covidtoday.MainActivity
 import com.ocics.covidtoday.R
 import com.ocics.covidtoday.adapter.PlacesRecyclerAdapter
 import com.ocics.covidtoday.databinding.FragmentVaccineBinding
-import com.ocics.covidtoday.model.VaccineStatics
+import com.ocics.covidtoday.model.VaccineStatistic
 import com.ocics.covidtoday.util.ApiUtil
-import com.ocics.covidtoday.util.VaccineStaticsClient
+import com.ocics.covidtoday.util.VaccineStatClient
 import com.ocics.covidtoday.viewmodel.MapsViewModel
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -62,7 +62,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
 
     // Vaccine Statics
     private val BASE_URL = "https://covid-api.mmediagroup.fr/v1/"
-    private lateinit var vaccineStaticsClient: VaccineStaticsClient
+    private lateinit var vaccineStatClient: VaccineStatClient
     private lateinit var administeredValueTextView: TextView
     private lateinit var fullyVaccinatedValueTextView: TextView
     private lateinit var partiallyVaccinatedValueTextView: TextView
@@ -214,22 +214,22 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
         val currentCountry = (activity as MainActivity).country
 
         val okHttpClient: OkHttpClient = OkHttpClient.Builder().build()
-        vaccineStaticsClient = retrofit2.Retrofit.Builder()
+        vaccineStatClient = retrofit2.Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(VaccineStaticsClient::class.java)
+            .create(VaccineStatClient::class.java)
         fetchVaccineDataFromAPI(currentCountry)
 
     }
 
     private fun fetchVaccineDataFromAPI(country: String) {
-        vaccineStaticsClient.getVaccines(country)
-            .enqueue(object : Callback<Map<String, VaccineStatics>> {
+        vaccineStatClient.getVaccines(country)
+            .enqueue(object : Callback<Map<String, VaccineStatistic>> {
                 override fun onResponse(
-                    call: Call<Map<String, VaccineStatics>>,
-                    response: Response<Map<String, VaccineStatics>>
+                    call: Call<Map<String, VaccineStatistic>>,
+                    response: Response<Map<String, VaccineStatistic>>
                 ) {
                     if (response.body() != null) {
                         mBinding.vaccineCardTitle.text = "Vaccine statistics (${(activity as MainActivity).country})"
@@ -243,7 +243,7 @@ class VaccineFragment : Fragment(), OnMapReadyCallback, PlacesRecyclerAdapter.Cl
                     }
                 }
 
-                override fun onFailure(call: Call<Map<String, VaccineStatics>>, t: Throwable) {
+                override fun onFailure(call: Call<Map<String, VaccineStatistic>>, t: Throwable) {
                     Log.e(ContentValues.TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
                 }
             })

@@ -6,7 +6,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface CovidStaticsClient {
+interface CovidStatClient {
     @GET("cases")
     fun getCases(
         @Query("country") country: String
