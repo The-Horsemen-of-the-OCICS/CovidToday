@@ -26,7 +26,7 @@ import com.github.aachartmodel.aainfographics.aachartcreator.AASeriesElement
 import com.ocics.covidtoday.MainActivity
 import com.ocics.covidtoday.R
 import com.ocics.covidtoday.databinding.FragmentCovidBinding
-import com.ocics.covidtoday.model.HistoryCovidStatics
+import com.ocics.covidtoday.model.HistoryCovidStatistic
 import com.ocics.covidtoday.model.News
 import com.ocics.covidtoday.util.CovidStaticsClient
 import com.squareup.picasso.Picasso
@@ -129,10 +129,10 @@ class CovidFragment : Fragment() {
 
     private fun fetchConfirmedDataFromAPI(country: String, province: String) {
         covidStaticsClient.getHistory("confirmed", country)
-            .enqueue(object : Callback<Map<String, HistoryCovidStatics>> {
+            .enqueue(object : Callback<Map<String, HistoryCovidStatistic>> {
                 override fun onResponse(
-                    call: Call<Map<String, HistoryCovidStatics>>,
-                    response: Response<Map<String, HistoryCovidStatics>>
+                    call: Call<Map<String, HistoryCovidStatistic>>,
+                    response: Response<Map<String, HistoryCovidStatistic>>
                 ) {
                     if (response.body() != null) {
                         if (response.body()!![province]?.getData() !== null) {
@@ -143,7 +143,7 @@ class CovidFragment : Fragment() {
                     }
                 }
 
-                override fun onFailure(call: Call<Map<String, HistoryCovidStatics>>, t: Throwable) {
+                override fun onFailure(call: Call<Map<String, HistoryCovidStatistic>>, t: Throwable) {
                     Log.e(TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
                 }
             })
@@ -151,10 +151,10 @@ class CovidFragment : Fragment() {
 
     fun fetchDeathDataFromAPI(country: String, province: String) {
         covidStaticsClient.getHistory("deaths", country)
-            .enqueue(object : Callback<Map<String, HistoryCovidStatics>> {
+            .enqueue(object : Callback<Map<String, HistoryCovidStatistic>> {
                 override fun onResponse(
-                    call: Call<Map<String, HistoryCovidStatics>>,
-                    response: Response<Map<String, HistoryCovidStatics>>
+                    call: Call<Map<String, HistoryCovidStatistic>>,
+                    response: Response<Map<String, HistoryCovidStatistic>>
                 ) {
                     if (response.body() != null) {
                         if (response.body()!![province]?.getData() !== null) {
@@ -165,7 +165,7 @@ class CovidFragment : Fragment() {
                     }
                 }
 
-                override fun onFailure(call: Call<Map<String, HistoryCovidStatics>>, t: Throwable) {
+                override fun onFailure(call: Call<Map<String, HistoryCovidStatistic>>, t: Throwable) {
                     Log.e(TAG, "fetchConfirmedDataFromAPI Failure: >>> $t")
                 }
             })
